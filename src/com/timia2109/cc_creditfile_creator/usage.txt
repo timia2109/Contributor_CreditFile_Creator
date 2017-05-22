@@ -1,5 +1,7 @@
-Usage: CC_Creditfile_Creator.jar <repository> <outFile> [<preFile>] [<postFile>]
+Usage: CC_Creditfile_Creator.jar <repository> <outFile> [options]
     <repository>: GitHubUsername/GitHubReponame
     <outFile>: The File where the output should saved
-    <preFile>: File which should prepend on the output
-    <postFile>: File which should append on the output
+
+    Options:
+    -pre <preFile>: File which should prepend on the output
+    -post <postFile>: File which should append on the output
