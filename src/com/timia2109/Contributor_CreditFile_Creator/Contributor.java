@@ -1,13 +1,13 @@
-package com.timia2109.cc_creditfile_creator;
+package com.timia2109.Contributor_CreditFile_Creator;
 
 /**
  * Wrapper for the Username. Better for sorting
  */
-public class Constributor implements Comparable<Constributor> {
+public class Contributor implements Comparable<Contributor> {
 
     private String name;
 
-    public Constributor(String name) {
+    public Contributor(String name) {
         this.name = name;
     }
 
@@ -16,7 +16,7 @@ public class Constributor implements Comparable<Constributor> {
     }
 
     @Override
-    public int compareTo(Constributor o) {
+    public int compareTo(Contributor o) {
         return name.compareToIgnoreCase( o.getName() );
     }
 

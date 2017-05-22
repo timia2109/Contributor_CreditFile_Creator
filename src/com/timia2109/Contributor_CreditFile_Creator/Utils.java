@@ -1,4 +1,4 @@
-package com.timia2109.cc_creditfile_creator;
+package com.timia2109.Contributor_CreditFile_Creator;
 
 import java.io.*;
 import java.util.Scanner;

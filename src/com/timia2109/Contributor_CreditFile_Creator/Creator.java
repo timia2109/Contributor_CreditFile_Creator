@@ -1,4 +1,4 @@
-package com.timia2109.cc_creditfile_creator;
+package com.timia2109.Contributor_CreditFile_Creator;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,35 +14,47 @@ import java.util.List;
 
 public class Creator {
 
+    public static final String  VERSION = "0.1",
+                                APPNAME = "Contributor_CreditFile_Creator";
+
     /**
      * Returns a String which list all constributors
      * @param userRepo GitHubUser/RepoName
      * @return String list with Constributors
      */
-    public static String getConstributors(String userRepo) throws Exception {
-        System.out.println("Start download...");
-        String jsonString = getConstributorsJSON(userRepo);
+    public static String getContributors(String userRepo) throws Exception {
+
+        int slashPos = userRepo.indexOf('/');
+        String owner = userRepo.substring(0, slashPos);
+
+        System.out.println("Start download contributors");
+        String jsonString = getContributorsJSON(userRepo);
         System.out.println("Download finsihed");
 
         JSONArray json = new JSONArray(jsonString);
 
-        List<Constributor> constList = new LinkedList<>();
+        List<Contributor> constList = new LinkedList<>();
 
         JSONObject current;
-        Constributor currentConst;
+        Contributor currentConst;
+        String currentName;
         for (int i=0; i<json.length(); i++) {
             current = json.getJSONObject(i);
 
             if (current.has("login")) {
-                currentConst = new Constributor(current.get("login").toString());
-                constList.add(currentConst);
+                currentName = current.get("login").toString();
+
+                if (!currentName.equals(owner)) {
+                    currentConst = new Contributor(currentName);
+                    constList.add(currentConst);
+                }
             }
         }
 
         Collections.sort(constList);
 
         StringBuilder sb = new StringBuilder();
-        for (Constributor s : constList) {
+        for (Contributor s : constList) {
             sb.append("- ").append(s).append('\n');
         }
 
@@ -55,7 +67,7 @@ public class Creator {
      * @return The JSON Result
      * @throws Exception if the Request fails
      */
-    private static String getConstributorsJSON(String userRepo) throws Exception {
+    private static String getContributorsJSON(String userRepo) throws Exception {
         String stringUrl = "https://api.github.com/repos/"+userRepo+"/contributors";
         URL url = new URL(stringUrl);
         URLConnection conn = url.openConnection();
@@ -75,6 +87,9 @@ public class Creator {
     }
 
     public static void main(String[] args) throws Exception{
+
+        System.out.println(APPNAME+" v"+VERSION);
+
         if (args.length < 2) {
             printUsage();
         }
@@ -98,20 +113,24 @@ public class Creator {
                 throw new IOException("File "+preFile+" don't exists!");
         }
 
+        System.out.println("Get contributors from "+repo);
+
         StringBuilder sbOut = new StringBuilder();
 
         if (preFile != null) {
             sbOut.append( Utils.getFile(preFile) );
+            System.out.println("Prepend file "+preFile);
         }
 
-        sbOut.append( getConstributors( repo ) );
+        sbOut.append( getContributors( repo ) );
 
         if (postFile != null) {
             sbOut.append( Utils.getFile( postFile ) );
+            System.out.println("Append file "+postFile);
         }
 
         Utils.writeFile(sbOut.toString(), outFile);
 
-        System.out.println("List created: " + outFile);
+        System.out.println("List created: " + outFile.getPath());
     }
 }
